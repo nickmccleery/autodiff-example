@@ -72,7 +72,7 @@ def compute_area_moment_of_inerta_sensitivities(
     # We only have one output, so the list of lists of lists can be flattened to a simple list.
     sensitivities_raw = moi_x.der.tolist()
     sensitivities = [x[0] for x in sensitivities_raw[0]]
-    
+
     return (moi, sensitivities)
 
 
@@ -94,15 +94,16 @@ if __name__ == "__main__":
         sensitivities_out.append(sensitivities)
 
     # Create a DataFrame
-    df = pd.DataFrame({
-        'depth': depths,
-        'i_xx': moi_out,
-        'sens_depth': [s[0] for s in sensitivities_out],
-        'sens_width': [s[1] for s in sensitivities_out],
-        'sens_t_web': [s[2] for s in sensitivities_out],
-        'sens_t_flange': [s[3] for s in sensitivities_out]
-    })
+    df = pd.DataFrame(
+        {
+            "depth": depths,
+            "i_xx": moi_out,
+            "sens_depth": [s[0] for s in sensitivities_out],
+            "sens_width": [s[1] for s in sensitivities_out],
+            "sens_t_web": [s[2] for s in sensitivities_out],
+            "sens_t_flange": [s[3] for s in sensitivities_out],
+        }
+    )
 
     # Export to CSV
-    df.to_csv('output.csv', index=False)
-        
+    df.to_csv("output.csv", index=False)
