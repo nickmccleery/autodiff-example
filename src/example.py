@@ -78,7 +78,7 @@ def compute_area_moment_of_inerta_sensitivities(
 
 if __name__ == "__main__":
     # Sweep a range of depths.
-    depths = np.linspace(50, 100, 51)
+    depths = np.arange(50, 60, 1)
     width = 40
     t_web = 5
     t_flange = 5
