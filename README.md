@@ -1,3 +1,10 @@
+# Background
+
+This project contains an incredibly simple example of automatic differentation
+as applied to the computation of an I-section beam's second moment of area.
+
+The example file, `src/example.py`, computes the second moment of area for an I-section beam, while also using the `auto-diff` package to compute the partial derivatives of the beam's second moment of area with respect to the beam's dimensions.
+
 # Environment Setup
 
 Use of pyenv for is recommended for the management of multiple Python versions. To install pyenv on a Unix-based
