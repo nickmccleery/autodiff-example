@@ -76,8 +76,87 @@ def compute_area_moment_of_inerta_sensitivities(
     return (moi, sensitivities)
 
 
-if __name__ == "__main__":
-    # Sweep a range of depths.
+def run_gradient_ascent():
+    """
+    Run a simple projected gradient ascent algorithm to maximize the area moment of inertia, with projection to ensure
+    parameters remain within specified bounds.
+    """
+    # Initial parameters.
+    DEPTH_INIT = 100
+    WIDTH_INIT = 50
+    T_WEB = 5
+    T_FLANGE = 5
+
+    # Bound parameters.
+    DEPTH_MIN = 100
+    DEPTH_MAX = 200
+    WIDTH_MIN = 50
+    WIDTH_MAX = 100
+
+    # Learning rate and number of iterations.
+    learning_rate = 0.0001
+    n_max_iterations = 100
+
+    # Parameter vector
+    x = np.array([[DEPTH_INIT], [WIDTH_INIT], [T_WEB], [T_FLANGE]])
+
+    # Bounds for each parameter. [min, max] for each.
+    bounds = np.array(
+        [
+            [DEPTH_MIN, DEPTH_MAX],
+            [WIDTH_MIN, WIDTH_MAX],
+            [T_WEB, T_WEB],
+            [T_FLANGE, T_FLANGE],
+        ]
+    )
+
+    # Set up the export parameters.
+    out_iteration = []
+    out_depth = []
+    out_width = []
+    out_moi = []
+
+    for i in range(n_max_iterations):
+        with auto_diff.AutoDiff(x) as xad:
+            moi_x = compute_area_moment_of_inertia_ad(xad)
+
+        moi = moi_x.val[0]
+        depth = xad.val[0][0]
+        width = xad.val[1][0]
+
+        out_iteration.append(i)
+        out_depth.append(depth)
+        out_width.append(width)
+        out_moi.append(moi)
+
+        # Gradient ascent step.
+        sensitivities = moi_x.der.tolist()
+        x = np.array(xad.val) + learning_rate * np.array(sensitivities)
+        x = x[0]
+
+        # Projection step to ensure parameters remain within bounds.
+        x = np.clip(x, bounds[:, 0].reshape(-1, 1), bounds[:, 1].reshape(-1, 1))
+
+        # Check for convergence.
+        if np.allclose(x, xad.val):
+            break
+
+    df = pd.DataFrame(
+        {
+            "iteration": out_iteration,
+            "depth": out_depth,
+            "width": out_width,
+            "moi": out_moi,
+        }
+    )
+
+    df.to_csv("solver_output.csv", index=False)
+
+
+def sweep_depths():
+    """
+    Sweep a range of depths and compute the area moment of inertia and sensitivities for each depth.
+    """
     depths = np.arange(100, 201, 10)
     width = 40
     t_web = 5
@@ -93,7 +172,6 @@ if __name__ == "__main__":
         moi_out.append(moi)
         sensitivities_out.append(sensitivities)
 
-    # Create a DataFrame
     df = pd.DataFrame(
         {
             "depth": depths,
@@ -105,5 +183,8 @@ if __name__ == "__main__":
         }
     )
 
-    # Export to CSV
     df.to_csv("output.csv", index=False)
+
+
+if __name__ == "__main__":
+    run_gradient_ascent()
