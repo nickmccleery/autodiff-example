@@ -15,10 +15,10 @@ def compute_area_moment_of_inertia(
     Ref: https://www.engineeringtoolbox.com/area-moment-inertia-d_1328.html
 
     Args:
-        depth (float): The depth of the beam.
-        width (float): The width of the beam.
-        t_web (float): The thickness of the web of the beam.
-        t_flange (float): The thickness of the flange of the beam.
+        depth (float): The depth of the section.
+        width (float): The width of the section.
+        t_web (float): The thickness of the section's web.
+        t_flange (float): The thickness of the section's flange.
 
     Returns:
         float: The area moment of inertia of the beam cross-section.
@@ -33,7 +33,7 @@ def compute_area_moment_of_inertia_ad(x: np.ndarray) -> np.ndarray:
     """
     Wraps the compute_area_moment_of_inertia function to accept an array of inputs.
 
-    Parameters:
+    Args:
         x (np.ndarray): An array of inputs containing the dimensions of the object.
 
     Returns:
@@ -51,16 +51,16 @@ def compute_area_moment_of_inerta_sensitivities(
     """
     Compute the area moment of inertia and sensitivities for a given set of parameters.
 
-    Parameters:
-    depth (float): The depth of the section.
-    width (float): The width of the section.
-    t_web (float): The thickness of the web.
-    t_flange (float): The thickness of the flange.
+    Args:
+        depth (float): The depth of the section.
+        width (float): The width of the section.
+        t_web (float): The thickness of the section's web.
+        t_flange (float): The thickness of the section's flange.
 
     Returns:
-    tuple: A tuple containing the area moment of inertia and sensitivities.
-           The area moment of inertia is a scalar value.
-           The sensitivities are a list of derivatives with respect to the input parameters.
+        tuple: A tuple containing the area moment of inertia and sensitivities.
+               The area moment of inertia is a scalar value.
+               The sensitivities are a list of derivatives with respect to the input parameters.
     """
     x = np.array([[depth], [width], [t_web], [t_flange]])
 
@@ -78,7 +78,7 @@ def compute_area_moment_of_inerta_sensitivities(
 
 if __name__ == "__main__":
     # Sweep a range of depths.
-    depths = np.arange(50, 60, 1)
+    depths = np.arange(100, 201, 10)
     width = 40
     t_web = 5
     t_flange = 5
