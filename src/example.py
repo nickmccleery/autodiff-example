@@ -42,7 +42,7 @@ def compute_area_moment_of_inertia_ad(x: np.ndarray) -> np.ndarray:
     return compute_area_moment_of_inertia(x[0], x[1], x[2], x[3])
 
 
-def compute_area_moment_of_inerta_sensitivities(
+def compute_area_moment_of_inertia_sensitivities(
     depth: float,
     width: float,
     t_web: float,
@@ -166,7 +166,7 @@ def sweep_depths():
     sensitivities_out = []
 
     for depth in depths:
-        moi, sensitivities = compute_area_moment_of_inerta_sensitivities(
+        moi, sensitivities = compute_area_moment_of_inertia_sensitivities(
             depth, width, t_web, t_flange
         )
         moi_out.append(moi)
